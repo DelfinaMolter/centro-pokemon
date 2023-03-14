@@ -1,17 +1,19 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import pokebola from "../../assets/pokebola.png";
 import entrenador from "../../assets/entrenador.png";
 import pikachu from "../../assets/pikachu.png";
 import Input from "../Input/Input";
 import Detalle from "./Detalle";
+import Select from "../Input/Select";
+import { useQuery } from "react-query";
+import getPokemon from "../../Hooks/getPokemon";
 
-// En este componente tenemos nuestro formulario y dentro de él
-// tenemos los componentes que necesitan consumir nuestro estado.
-// Recuerda cual es el paso que debemos tomar para que nuestros
-// componentes puedan consumir un estado global.
 
 const Formulario = () => {
+  const {data} = useQuery(['tiposPokemon'], getPokemon)
+
+  console.log(data?.results)
+
   return (
     <>
       <header className="form-header">
@@ -30,26 +32,28 @@ const Formulario = () => {
           pokémon
         </p>
         <div className="cuerpo-formulario">
-          {/*
-           Si tan solo tuviesemos una manera de "encapsular" nuestros componentes
-           para que puedan acceder al estado global.
-          */}
           <div className="inputs">
             <div>
               <p className="nombre-seccion">
                 <img src={entrenador} alt="entrenador" />
                 <span>ENTRENADOR</span>
               </p>
-              <Input name="nombre" label="Nombre" />
-              <Input name="apellido" label="Apellido" />
-              <Input name="email" label="Email" type="email" />
+              <Input name="nombre" label="Nombre" atribute="ACTUALIZAR_ENTRENADOR" reference={true}/>
+              <Input name="apellido" label="Apellido" atribute="ACTUALIZAR_ENTRENADOR" />
+              <Input name="email" label="Email" type="email" atribute="ACTUALIZAR_ENTRENADOR" />
             </div>
             <div>
               <p className="nombre-seccion">
                 <img src={pikachu} alt="pikachu" />
                 <span>POKEMON</span>
               </p>
-              <Input name="nombrePokemon" label="Nombre" />
+              <Input name="nombrePokemon" label="Nombre" atribute="ACTUALIZAR_POKEMON" />
+              {/* {isLoading ? "cargando tipos de pokemon": <Select name="tipoPokemon" label="Tipo" att="ACTUALIZAR_POKEMON" data={data}/> }   */}
+              {/* <Select name="tipoPokemon" label="Tipo" att="ACTUALIZAR_POKEMON" data={[{name:'1'},{name:'2'},{name:'3'}]}/> */}
+              <Select name="tipoPokemon" label="Tipo" atribute="ACTUALIZAR_POKEMON" data={data?.results}/>
+              <Input name="elementoPokemon" label="Elemento" atribute="ACTUALIZAR_POKEMON" />
+              <Input name="alturaPokemon" label="Altura" type="number"  atribute="ACTUALIZAR_POKEMON" />
+              <Input name="edadPokemon" label="Edad" type="number" atribute="ACTUALIZAR_POKEMON" />
             </div>
           </div>
           <Detalle />

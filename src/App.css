@@ -103,7 +103,7 @@ h1 {
   width: 100%;
 }
 
-.input-contenedor input {
+.input-contenedor input, .input-contenedor select {
   padding: 1rem;
   width: 300px;
   border-radius: 10px;

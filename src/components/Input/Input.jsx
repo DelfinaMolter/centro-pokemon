@@ -1,31 +1,57 @@
-import React from "react";
 
-const Input = ({ name, label, type = "text" }) => {
-  // Aqui deberíamos acceder al estado global para poder obtener los datos
-  // del formulario y una manera de actualizar los mismos.
+import { useDispatch} from "../../Hooks/ContextoFormulario";
+import PropTypes from "prop-types"
+import { useEffect, useRef, useState } from "react";
 
-  // También, utilizaremos un estado local para manejar el estado del input.
+/**
+ * 
+ * @param {object} props Propiedades del componente
+ * @param {string} props.name Nombre del campo de entrada
+ * @param {string} props.label Etiqueta que describe el campo de entrada
+ * @param {string} [props.type="text"] Tipo de campo de entrada
+ * @param {string} props.atribute Tipo de reductor
+ * @param {boolean} [props.reference=false] Tipo de reductor
+ * @returns {JSX.Element} Componente de entrada
+ */
+const Input = ({ name, label, type = "text",atribute , reference=false}) => {
+  const nameRef =useRef(null)
+
+  const [valueInput, setValueInput] = useState('')
+  const dispatch = useDispatch()
+
+  console.log('att: ' + atribute)
+
+  useEffect(()=>{
+    if(reference){
+      nameRef.current.focus();
+    }
+  },[])
+
 
   const onChange = (e) => {
-    // Aquí deberíamos actualizar el estado local del input.
+    setValueInput(e.target.value)
   };
 
   const onBlur = (e) => {
-    e.preventDefault();
+    dispatch({
+      type: e.target.getAttribute('att'),
+      payload: {[e.target.name]: e.target.value}
+    })
 
-    // Aqui deberíamos actualizar el estado global con los datos de
-    // cada input.
-    // TIP: Podemos utilizar el nombre de cada input para guardar
-    // los datos en el estado global usando una notación de { clave: valor }
   };
+
+
 
   return (
     <div className="input-contenedor">
       <label htmlFor={name}>{label}</label>
       <input
         type={type}
-        value={"Siempre tengo el mismo valor XD"}
+        value={valueInput}
         id={name}
+        name={name}
+        att={atribute}
+        ref={reference? nameRef: null}
         onChange={onChange}
         onBlur={onBlur}
       />
@@ -34,3 +60,12 @@ const Input = ({ name, label, type = "text" }) => {
 };
 
 export default Input;
+
+
+Input.propTypes ={
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  atribute: PropTypes.string.isRequired,
+  reference: PropTypes.bool
+}
